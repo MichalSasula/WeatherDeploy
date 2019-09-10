@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="pl-PL">
+
+<head>
+    <meta charset="utf-8">
+    <title>Pogodynka</title>
+    <meta name="description" content="Aktualna prognoza pogody dla Twojego miasta!">
+    <meta name="keywords" content="prognoza pogody, pogoda, temperatura">
+    <meta name="author" content=" ">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/open-iconic/1.1.1/font/css/open-iconic-bootstrap.min.css" integrity="sha256-BJ/G+e+y7bQdrYkS2RBTyNfBHpA9IuGaPmf9htub5MQ=" crossorigin="anonymous" />
+
+    <link href="https://fonts.googleapis.com/css?family=Cantora+One|Open+Sans&display=swap" rel="stylesheet"> 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"></script> 
+</head>
+
+<body>
+   <div id="background"></div>
+    <header id="pageHeader">
+        <h1>Pogodynka</h1> 
+    </header>
+    
+    <section id="inputSection">
+        <form class="container justify-content-center">
+            <div class="row">
+                <div class="dataInput col-sm-12">
+                    <input id="placeInput" type="text" placeholder="Twoje miasto">
+                </div>
+            </div>
+            <div class="row justify-content-center align-items-end">
+                <input id="submit" type="button" value="Sprawdź prognozy!" class="col-2">
+            </div>
+        </form>
+    
+    </section>
+    <div id="inputBar" class="bar">
+            <button id="help"><span class="oi oi-question-mark"></span></button>
+    </div>
+    <main>
+        <section id="messages">        
+          <div class="container">
+              <div class="row">
+                  <div id="typingError" class="error col-md-6" >
+                      <h4><span class="oi oi-warning"></span> Nazwa miasta została wpisana niepoprawnie</h4>
+                      <p>Nazwa miasta nie powinna zawierać znaków różnych od liter.</p>
+                  </div>
+                  <div id="noPlaceError" class="error col-md-6">
+                        <h4><span class="oi oi-warning"></span> Nie mamy danych dla Twojego miasta</h4>
+                        <p>Niestety, nie mamy danych dla Twojego miasta. Spróbuj poszukać prognozy dla innego miasta położonego niedaleko Twojego miejsca zamieszkania.</p>
+                  </div>
+                  <div id="dateError" class="error col-md-6">
+                        <h4 ><span class="oi oi-warning"></span> Nie dysponujemy prognozą na wybrany dzień</h4>
+                        <p>Udostępniamy prognozę pogody wyłącznie dla 5 najbliższych dni.</p>
+                  </div>
+                  <div id="APIError" class="error col-md-6">
+                        <h4><span class="oi oi-warning"></span >Wystąpił błąd przy pobraniu danych</h4>
+                        <p>Spróbuj ponownie.</p>
+                  </div>
+              </div>
+            </div>        
+        </section>
+        <section id="weather-info">
+            <header id="forecastHeader">
+                    <h2>Prognoza szczegółowa</h2>
+                    <button id="forecastShowHide"class="showHide"><span class="oi oi-chevron-bottom"></span></button>
+            </header>
+            <div class = "content">
+                <section id="forecast" class="container-fluid">
+                    <h4 id="detailedHeader">Dane dla: </h4>
+                    <div id="sliderDiv">
+                        <img id='leftArrow'>
+                        <input id="hourSlider" type="range" min="0" max="24" step="3" value="24" data-tilenumber="0">
+                        <img id='rightArrow'>
+                    </div>
+                    <div class="row justify-content-center">
+                    <!---sekcja na prognozę szczegółową (dla jednego dnia)-->
+                        <div  class='detail col-sm-4 col-md-3'>cokolwiek</div>
+                        <div  class='detail col-sm-4 col-md-3'>cokolwiek</div>
+                        <div  class='detail col-sm-4 col-md-3'>cokolwiek</div>
+                        <div  class='detail col-sm-4 col-md-3'>cokolwiek</div>
+                        <div  class='detail col-sm-4 col-md-3'>cokolwiek</div>
+                        <div  class='detail col-sm-4 col-md-3'>cokolwiek</div>
+                    </div>
+                </section>
+                <div id="forecastBar" class="bar">
+                    <a title="Zmień dane" href="#inputSection"><button class="edit" ><span class="oi oi-pencil"></span></button></a>
+                    <button class="info"><span class="oi oi-info"></span></button>
+                </div>
+            </div>
+
+            
+            <header id="shortForecastHeader">
+                    <h2>Prognoza na najbliższe dni</h2>
+                    <button class="showHide"><span class="oi oi-chevron-bottom"></span></button>
+            </header>
+            <div class = "content">
+                <section id="shortForecast" class="container-fluid">
+                
+                <!--prognoza skrótowa-->
+
+                <div class="row justify-content-center">
+                    <div class="short col-sm-4 col-md-3 col-lg-2" data-shortIndex="0">
+                        <h5 class="shortHeader">cokolwiek</h5>
+                        <figure>
+                            <img class="shortImg" src="http://openweathermap.org/img/wn/04d@2x.png">
+                            <figcaption></figcaption>
+                        </figure>
+                        <table class="table">
+                            <tbody>
+                                <tr>
+                                    <th><i class="wi wi-thermometer"></i></th>
+                                    <td class="shortTemperature">100</td>
+
+                                </tr>
+                                <tr>
+                                    <th><i class="wi wi-barometer"></i></th>
+                                    <td class="shortPressure">100</td>
+
+                                </tr>
+                                <tr>
+                                    <th><i class="wi wi-humidity"></i></th>
+                                    <td class="shortHumidity">100</td>
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="short shortForecast col-sm-4 col-md-3 col-lg-2" data-shortIndex="1">
+                        <h5 class="shortHeader">cokolwiek</h5>
+                        <figure>
+                            <img class="shortImg" src="http://openweathermap.org/img/wn/04d@2x.png">
+                            <figcaption></figcaption>
+                        </figure>
+                        <table class="table">
+                                <tbody>
+                                    <tr>
+                                        <th><i class="wi wi-thermometer"></i></th>
+                                        <td class="shortTemperature">100</td>
+            
+                                    </tr>
+                                    <tr>
+                                        <th><i class="wi wi-barometer"></i></th>
+                                        <td class="shortPressure">100</td>
+            
+                                    </tr>
+                                    <tr>
+                                        <th><i class="wi wi-humidity"></i></th>
+                                        <td class="shortHumidity">100</td>
+            
+                                    </tr>
+                                </tbody>
+                        </table>
+                    </div>
+                    <div class="short shortForecast col-sm-4 col-md-3 col-lg-2" data-shortIndex="2">
+                        <h5 class="shortHeader">cokolwiek</h5>
+                        <figure>
+                            <img class="shortImg" src="http://openweathermap.org/img/wn/04d@2x.png">
+                            <figcaption></figcaption>
+                        </figure>
+                        <table class="table">
+                                <tbody>
+                                    <tr>
+                                        <th><i class="wi wi-thermometer"></i></th>
+                                        <td class="shortTemperature">100</td>
+            
+                                    </tr>
+                                    <tr>
+                                        <th><i class="wi wi-barometer"></i></th>
+                                        <td class="shortPressure">100</td>
+            
+                                    </tr>
+                                    <tr>
+                                        <th><i class="wi wi-humidity"></i></th>
+                                        <td class="shortHumidity">100</td>
+            
+                                    </tr>
+                                </tbody>
+                        </table>
+                    </div>
+                    <div class="short shortForecast col-sm-4 col-md-3 col-lg-2" data-shortIndex="3">
+                        <h5 class="shortHeader">cokolwiek</h5>
+                        <figure>
+                            <img class="shortImg" src="http://openweathermap.org/img/wn/04d@2x.png">
+                            <figcaption></figcaption>
+                        </figure>
+                        <table class="table">
+                                <tbody>
+                                    <tr>
+                                        <th><i class="wi wi-thermometer"></i></th>
+                                        <td class="shortTemperature">100</td>
+            
+                                    </tr>
+                                    <tr>
+                                        <th><i class="wi wi-barometer"></i></th>
+                                        <td class="shortPressure">100</td>
+            
+                                    </tr>
+                                    <tr>
+                                        <th><i class="wi wi-humidity"></i></th>
+                                        <td class="shortHumidity">100</td>
+            
+                                    </tr>
+                                </tbody>
+                        </table>
+                    </div>
+                    <div class="short shortForecast col-sm-4 col-md-3 col-lg-2" data-shortindex="4">
+                        <h5 class="shortHeader">cokolwiek</h5>
+                        <figure>
+                            <img class="shortImg" src="http://openweathermap.org/img/wn/04d@2x.png">
+                            <figcaption></figcaption>
+                        </figure>
+                        <table class="table">
+                            <tbody>
+                                <tr>
+                                    <th><i class="wi wi-thermometer"></i></th>
+                                    <td class="shortTemperature">100</td>
+        
+                                </tr>
+                                <tr>
+                                    <th><i class="wi wi-barometer"></i></th>
+                                    <td class="shortPressure">100</td>
+        
+                                </tr>
+                                <tr>
+                                    <th><i class="wi wi-humidity"></i></th>
+                                    <td class="shortHumidity">100</td>
+        
+                                </tr>
+                            </tbody>
+                    </table>
+                        </div>
+                </div>
+                </section>
+                <div id="shortForecastBar" class="bar">
+                    <a title="Zmień dane" href="#inputSection"><button ><span class="oi oi-pencil"></span></button></a>
+                    <button ><span class="oi oi-info"></span></button>
+                </div>
+            </div>
+        
+            <header id="chartsHeader">
+                    <h2>Wykresy</h2>
+                    <button class="showHide"><span class="oi oi-chevron-bottom"></span></button>
+            </header>
+            <div class="content">
+                <section id="charts" class="container-fluid"> 
+                    <canvas id="chart" class="mx-auto mb-3"></canvas>
+                    <canvas id="chart2" class="mx-auto mb-3"></canvas>
+                    <canvas id="chart3" class="mx-auto mb-3"></canvas>
+                </section>
+                <div id="chartsBar" class="bar">
+                    <a title="Zmień dane" href="#inputSection"><button><span class="oi oi-pencil"></span></button></a>
+                    <button><span class="oi oi-info"></span></button>
+                </div>
+            </div>
+        </section>  
+    </main>
+    <section id="error-info"> 
+        <h1 id="error-type"></h1>
+        <h3 id="error-message"></h3>
+    </section>
+    <footer class="fixed-bottom">
+        Pogodynka. Wykonano przez..
+    </footer>
+    
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    
+    <!-- JAVA SCRIPT 
+        <script src="chart.js"></script>
+    <script src="APICommunication.js"></script>
+    <script src="Forecast.js" ></script>
+    <script src="functionalities.js"></script>
+    <script src="main.js"></script> -->
+
+ </body>
+
+</html>
+
+
