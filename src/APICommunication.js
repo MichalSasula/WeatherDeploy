@@ -8,7 +8,7 @@ export function correctPolishLetters (string) {
 function APIRequestByCityName(city)
 {
     city=correctPolishLetters(city);
-    return `http://api.openweathermap.org/data/2.5/forecast?q=${city}&units=metric&lang={pl}&APPID=aa89918a50010961a10dfbbee0781cb1`
+    return `https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=metric&lang={pl}&APPID=aa89918a50010961a10dfbbee0781cb1`
 }
 /*Język przestawiony w api na polski (&lang={pl}), ale nie zawuażyłam zmiany */
 
